@@ -19,6 +19,11 @@ DiscordClient = new Discord.Client({
     ]
 });
 
+// When client is ready, send signal to process (just for server environment)
+DiscordClient.once('ready', () => {
+    process.send('ready');
+});
+
 // bot commands
 DiscordClient.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');
