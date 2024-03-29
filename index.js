@@ -21,7 +21,9 @@ DiscordClient = new Discord.Client({
 
 // When client is ready, send signal to process (just for server environment)
 DiscordClient.once('ready', () => {
-    process.send('ready');
+    try {
+        process.send('ready');
+    } catch { };
 });
 
 // bot commands
