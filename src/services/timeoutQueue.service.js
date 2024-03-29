@@ -17,11 +17,11 @@ class TimeOutQueue {
         let guild = this._getByGuildId(guildId);
 
         if (guild) {
-            clearInterval(guildId.timeoutId);
+            clearTimeout(guild.timeoutId);
             this.queue.splice(this.queue.indexOf(guild), 1);
         }
 
-        let timeout = setTimeout(() => this.onTimeout(guildId), Number(process.env.DESTROY_VOICE_CONNECTION_TIMEOUT) + playBackLength);
+        const timeout = setTimeout(() => this.onTimeout(guildId), Number(process.env.DESTROY_VOICE_CONNECTION_TIMEOUT) + playBackLength);
         this.queue.push({
             guildId: guildId,
             timeoutId: timeout,

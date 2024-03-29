@@ -10,7 +10,7 @@ async function playBind(req, res) {
 
     try {
         let result = await playSoundInVoiceChannel(data['guildId'], data['channelId'], data['url']);
-        res.send({ status: 200, message: result });
+        res.send({ status: result[0], message: result[1] });
     } catch (e) {
         console.log(e);
         res.send({ status: 500, message: "Exception while playing a sound" });

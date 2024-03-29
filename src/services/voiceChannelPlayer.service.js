@@ -14,7 +14,7 @@ const userCount = async (guildId, channelId) => {
 
 const playSoundInVoiceChannel = async (guildId, channelId, resourceUrl) => {
     if (process.env.ALLOW_JOIN_EMPTY_CHANNELS != "true" && await userCount(guildId, channelId) <= 0) {
-        return "No users connected to voice channel. No sound will be played.";
+        return [403, "No users connected to voice channel. No sound will be played."];
     }
 
     let guild = await DiscordClient.guilds.cache.get(guildId);
@@ -39,7 +39,7 @@ const playSoundInVoiceChannel = async (guildId, channelId, resourceUrl) => {
     player.play(resource);
     connection.subscribe(player);
 
-    return "Sound played successfuly";
+    return [200, "Sound played successfuly"];
 };
 
 
