@@ -28,6 +28,12 @@ module.exports = {
             return;
         }
 
+        let searchGuildId = await query("SELECT * FROM guilds WHERE guildId = ?", [interaction.guildId]);
+        if (searchGuildId.length > 0) {
+            await interaction.reply("**Cannot verify the bot twice on the same server!**");
+            return;
+        }
+
         let res = await query("UPDATE guilds SET guildId = ?, verified = 1 WHERE id = ?;", [interaction.guildId, guild['id']]);
         if (res['affectedRows'] == 1) {
             await interaction.reply("Your server as been verified, you may soon use your bind in voice channels.");
