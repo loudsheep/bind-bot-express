@@ -26,11 +26,19 @@ const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN);
     try {
         console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
-        // The put method is used to fully refresh all commands in the guild with the current set
-        const data = await rest.put(
-            Routes.applicationGuildCommands(process.env.TMP_CLIENT_ID, process.env.TMP_GUILD_ID),
-            { body: commands },
-        );
+        let data = null;
+        // The put method is used to fully refresh all commands in the guild/globally with the current set
+        if (process.env.DEPLOY_GLOBALLY == "true") {
+            data = await rest.put(
+                Routes.applicationCommands(process.env.DEPLOY_CLIENT_ID),
+                { body: commands },
+            );
+        } else {
+            data = await rest.put(
+                Routes.applicationGuildCommands(process.env.DEPLOY_CLIENT_ID, process.env.DEPLOY_GUILD_ID),
+                { body: commands },
+            );
+        }
 
         console.log(`Successfully reloaded ${data.length} application (/) commands.`);
     } catch (error) {

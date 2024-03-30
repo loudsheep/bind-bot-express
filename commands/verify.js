@@ -23,6 +23,10 @@ module.exports = {
             return;
         }
         guild = guild[0];
+        if (guild['verified']) {
+            await interaction.reply("Looks like you're all set! Server's been already verified.");
+            return;
+        }
 
         let res = await query("UPDATE guilds SET guildId = ?, verified = 1 WHERE id = ?;", [interaction.guildId, guild['id']]);
         if (res['affectedRows'] == 1) {
