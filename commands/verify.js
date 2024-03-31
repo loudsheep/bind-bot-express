@@ -16,8 +16,13 @@ module.exports = {
     async execute(interaction) {
         const code = interaction.options.getString('code');
 
-        let guild = await query("SELECT * FROM guilds WHERE verification_code = ?", [code]);
+        let searchGuildId = await query("SELECT * FROM guilds WHERE guildId = ?", [interaction.guildId]);
+        if (searchGuildId.length > 0) {
+            await interaction.reply("**Cannot verify the bot twice on the same server!**");
+            return;
+        }
 
+        let guild = await query("SELECT * FROM guilds WHERE verification_code = ?", [code]);
         if (guild.length != 1) {
             await interaction.reply("There was a problem verifying your server. Is the **code** correct?");
             return;
@@ -25,12 +30,6 @@ module.exports = {
         guild = guild[0];
         if (guild['verified']) {
             await interaction.reply("Looks like you're all set! Server's been already verified.");
-            return;
-        }
-
-        let searchGuildId = await query("SELECT * FROM guilds WHERE guildId = ?", [interaction.guildId]);
-        if (searchGuildId.length > 0) {
-            await interaction.reply("**Cannot verify the bot twice on the same server!**");
             return;
         }
 
