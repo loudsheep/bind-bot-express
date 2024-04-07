@@ -1,18 +1,24 @@
-async function listVoiceChannels(req, res) {
-    let guildId = req.params.guildId;
+const { getAndSaveVoiceChannelsList } = require("../services/channels.service");
 
-    try {
-        let guild = await DiscordClient.guilds.fetch(guildId);
-        let channels = await guild.channels.fetch();
-        channels = channels.filter(c => c.type == "2");
+async function updateChannels(req, res) {
+    let data = req.body['guildId'] ? req.body : JSON.parse(req.body['body']);
+    if (!data['guildId']) {
+        res.send({ status: 400, message: "Missing keys in JSON request" });
+        return;
+    }
 
-        res.send({ status: 200, message: "Voice channels", data: channels });
-    } catch {
-        res.send({ status: 403, message: "There's a problem retrieving the data" });
-    };
+    let guildId = data['guildId'];
+    let updated = await getAndSaveVoiceChannelsList(guildId);
+
+    if (updated) {
+        res.send({ status: 200, message: "OK" });
+        return;
+    }
+
+    res.send({ status: 500, message: "There's a problem retrieving the data" });
 }
 
 
 module.exports = {
-    listVoiceChannels,
+    updateChannels,
 }
